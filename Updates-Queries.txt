@@ -99,13 +99,6 @@ select * from employee order by position;
 
 -- And now I'm going to hand it over to Caleb
 
-
-
-
-
-----		GABE		----
-
-
 -- show the number of cars of each color
 select color, count(veh_id)
 	from vehicle
