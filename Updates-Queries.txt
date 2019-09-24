@@ -1,0 +1,177 @@
+--Team: Fertile Crocodiles
+--Business: Reptile Rentals
+--TABLES / UPDATES / QUERIES
+--4.30.19
+
+------------------- TABLES -------------------
+
+--first, we will show all 20 of the tables we have created
+
+select * from employee;
+select * from employee_phone;
+select * from employee_email;
+select * from hourly_employee;
+select * from salary_employee;
+select * from vehicle;
+select * from model;
+select * from supplier;
+select * from supplier_phone;
+select * from supplier_email;
+select * from supplier_address;
+select * from supply_order;
+select * from client;
+select * from client_email;
+select * from client_phone;
+select * from client_address;
+select * from credit_card;
+select * from personal_customer;
+select * from business;
+select * from transaction;
+
+
+
+------------------- UPDATES -------------------
+
+-- So moving onto updates, we're going to show the table before it's updated 
+and then show it after it's updated.
+-- We're going to update three tables:
+-- hourly_employee, employee and vehicle table
+-- raise hourly employee 3's rate from 20 to 21---
+select * from hourly_employee;
+update hourly_employee 
+	set rate = 21 
+	where h_emp_id = 3;
+select * from hourly_employee;
+
+
+-- promote employee 4 from manager to regional manager---
+select * from employee;
+update employee 
+	set position = 'Regional Manager' 
+	where emp_id = 4;
+select * from employee;
+
+
+-- update vehicle 2's status from 'in use' to 'available'---
+select * from vehicle;
+update vehicle 
+	set status = 'available' 
+	where veh_id = 2;
+select * from vehicle;
+--And that was the end of updates
+
+----------------- QUERIES ------------------
+
+-- Onto queries
+-- show the status of vehicle 1
+select status from vehicle where veh_id = 1;
+
+-- show the average price of all vehicles
+select avg(price) from vehicle;
+
+select * from vehicle;
+
+
+--  show the date of supply order 2
+select order_date from supply_order where order_id = 2;
+select * from supply_order;
+--End of queries
+
+--GROUP BY
+
+--Now I'm going to show some group bys
+-- This statement shows the number of employees of each type (hourly or salary)
+select emp_type, count(emp_id)
+	from employee
+	group by emp_type
+	order by emp_type;
+select * from employee order by emp_type;
+
+
+-- This statement shows the number of employees of each position having 
+more than one employee
+-- Manager is not shown because there is only one manager
+select position, count(emp_id)
+	from employee
+	group by position
+	having count(emp_id) > 1;
+select * from employee order by position;
+
+-- And now I'm going to hand it over to Caleb
+
+
+
+
+
+----		GABE		----
+
+
+-- show the number of cars of each color
+select color, count(veh_id)
+	from vehicle
+	group by color
+	order by color;
+select * from vehicle order by color;
+
+
+-- show the average transaction price for each employee having at least 2 transactions
+select  emp_name, avg(price)
+	from transaction, employee
+	where transaction.emp_id = employee.emp_id
+	group by emp_name
+	having count(tran_id) > 1
+	order by avg(price) desc;
+select * from transaction order by emp_id;
+select * from employee;
+
+
+--JOINS
+
+
+-- show the address of each supplier
+select sup_name, street_address 
+	from supplier, supplier_address
+	where supplier.sup_id = supplier_address.sup_id;
+select * from supplier;
+select * from supplier_address;
+
+
+-- show the vehicle IDs and models each client has rented as well as client types
+select transaction.client_id, client_type, transaction.veh_id, model 
+	from client, model, transaction, vehicle
+	where client.client_id = transaction.client_id 
+	And transaction.veh_id = vehicle.veh_id
+	And vehicle.veh_id = model.veh_id
+	order by client_id;
+select * from transaction;
+select * from client;
+select * from model;
+select * from vehicle;
+
+
+-- show all the relative information about transaction 1
+select client_id, emp_name, model, vehicle.price
+	from transaction, employee, vehicle, model
+	where tran_id = 1
+	and transaction.emp_id = employee.emp_id
+	and transaction.veh_id = vehicle.veh_id
+	and vehicle.veh_id = model.veh_id;
+select * from transaction;
+select * from employee;
+select * from model;
+select * from vehicle;
+
+
+-- show the number of transactions performed by the employee named Gabe
+select count(tran_id) 
+	from employee, transaction
+	where transaction.emp_id = employee.emp_id
+	and emp_name = 'Gabe';
+select * from employee;
+select * from transaction order by emp_id;
+
+
+
+
+-- THE END --
+
